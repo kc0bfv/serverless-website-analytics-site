@@ -6,32 +6,31 @@ import * as sns from 'aws-cdk-lib/aws-sns';
 // import {Swa} from "serverless-website-analytics/src"; // For the npm linked package one while testing
 import {AllAlarmTypes, Swa} from 'serverless-website-analytics';
 
+import { appname, zonecert, fullname, email, sites, frontenddomain, zoneid, zonename } from '../secrets';
+
 export class App extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    /* Optional, see descriptions on the `domain` property below. Needs tp cover the `domain.name` and
+    /* Optional, see descriptions on the `domain` property below. Needs to cover the `domain.name` and
        {auth.cognito.loginSubDomain}.{domain.name}` domains and must be in us-east-1 even if your stack is
        somewhere else  */
-    const wildCardCertUsEast1 = cert.Certificate.fromCertificateArn(this, 'Cert',
-        'arn:aws:acm:us-east-1:581184285249:certificate/62ff8b37-6710-4838-999a-7d7676a068ae');
+    const wildCardCertUsEast1 = cert.Certificate.fromCertificateArn(this, 'Cert', zonecert);
 
     const alarmTopic = new sns.Topic(this, "alarm-topic");
     new sns.Subscription(this, "alarm-topic-subscription", {
       topic: alarmTopic,
       protocol: sns.SubscriptionProtocol.EMAIL,
-      endpoint: 'rehan.vdm4@gmail.com',
+      endpoint: email,
     });
 
-    new Swa(this, 'swa-demo', {
+    new Swa(this, appname, {
       environment: 'prod',
       awsEnv: {
         account: this.account,
         region: this.region,
       },
-      sites: [
-        'simulated',
-      ],
+      sites: sites,
 
       allowedOrigins: ['*'],
       /* Can be set explicitly instead of allowing all */
@@ -51,28 +50,28 @@ export class App extends cdk.Stack {
       //     password: 'YouMayPass',
       //   },
       // },
-      // auth: {
-      //   cognito: {
-      //     loginSubDomain: 'login', // This has to be unique across Cognito if not specifying your own domain
-      //     users: [{
-      //       name: '<full name>',
-      //       email: '<name@mail.com>',
-      //     }]
-      //   }
-      // },
+      auth: {
+        cognito: {
+          loginSubDomain: 'login', // This has to be unique across Cognito if not specifying your own domain
+          users: [{
+            name: fullname,
+            email: email,
+          }]
+        }
+      },
 
       /* Optional, if not specified uses default CloudFront and Cognito domains */
       domain: {
-        name: 'demo.serverless-website-analytics.com',
+        name: frontenddomain,
         usEast1Certificate: wildCardCertUsEast1,
         /* Optional, if not specified then no DNS records will be created. You will have to create the DNS records yourself. */
         hostedZone: route53.HostedZone.fromHostedZoneAttributes(this, 'HostedZone', {
-          hostedZoneId: 'Z00387321EPPVXNC20CIS',
-          zoneName: 'demo.serverless-website-analytics.com',
+          hostedZoneId: zoneid,
+          zoneName: zonename,
         }),
         trackOwnDomain: true,
       },
-      isDemoPage: true, /* Do not specify for your dashboard */
+      //isDemoPage: true, /* Do not specify for your dashboard */
 
       observability: {
         dashboard: true,

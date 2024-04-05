@@ -4,14 +4,16 @@ import * as cdk from 'aws-cdk-lib';
 import { App } from '../lib/app';
 import {Tags} from "aws-cdk-lib";
 
+import { appname, account, region } from '../secrets';
+
 const app = new cdk.App();
 
-const swaStack = new App(app, 'swa-test', {
+const swaStack = new App(app, appname, {
   env: {
-    account: '581184285249', // Rehan's demo account
-    region: 'us-east-1',
+    account: account, // My account
+    region: region,
   },
 });
 
 /* Adds tags to all the resources for billing purposes */
-Tags.of(swaStack).add('App', 'swa-demo');
+Tags.of(swaStack).add('App', appname);
