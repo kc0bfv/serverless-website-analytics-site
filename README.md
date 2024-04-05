@@ -1,3 +1,7 @@
+# What Is This?
+
+Example site implementing https://github.com/kc0bfv/serverless-website-analytics-site
+
 # Getting Started
 
 Have NPM already installed.
@@ -16,7 +20,7 @@ Run `./node_modules/aws-cdk/bin/cdk deploy APPNAME`, filling in APPNAME with the
 
 Run `./node_modules/aws-cdk/bin/cdk destroy APPNAME`, filling in APPNAME with the value you put in secrets.ts.
 
-## Useful commands
+# Other Useful commands
 
 * `npm install`     setup dependencies
 * `npm run build`   compile typescript to js
