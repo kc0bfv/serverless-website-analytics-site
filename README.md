@@ -2,11 +2,13 @@
 
 Example site implementing https://github.com/kc0bfv/serverless-website-analytics-site
 
+Blog post on this here: https://blog.notmet.net/2024/05/serverless-analytics/
+
 # Getting Started
 
 Have NPM already installed.
 
-Copy `secrets_example.ts` to `secrets.ts` and fill it in.
+Copy `secrets_example.ts` to `secrets.ts` and fill it in.  You will see that you'll need to take some action in AWS to get some of these values.  Specifically - you will need to create a Route32 zone, and a certificate that covers domains in that zone.
 
 Run `npm install` to get the npm prerequisites setup.
 
