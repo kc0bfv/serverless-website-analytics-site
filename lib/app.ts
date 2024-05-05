@@ -82,7 +82,7 @@ export class App extends cdk.Stack {
       },
       anomaly: {
         detection: {
-            staticThreshold: 1000,
+            minimumViews: 1000,
         },
         alert: {
           topic: alarmTopic,
